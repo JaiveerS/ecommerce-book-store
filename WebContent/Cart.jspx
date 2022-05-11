@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=ISO-8859-1" 
+		pageEncoding="ISO-8859-1" session="true"/>
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<LINK rel="StyleSheet" href="${pageContext.request.contextPath}/res/style.css" type="text/css" title="cse4413" media="screen,print"/>
+	<script type="text/javascript"
+	src="${pageContext.request.contextPath}/res/mc.js">;</script>
+	<title>Cart</title>
+	<style>
+		.cartItems {
+			margin-left: 100px;
+			margin-top: 150px;
+			float: left;
+			background-color: cornsilk;
+			padding: 20px;
+			width: 700px;
+		}
+		
+		.cartList {
+			font-weight: bold;
+			font-size: 20px;
+			margin-top: 20px;
+			margin-left: 100px;
+		}
+		
+		.orderSummary {
+			margin-right: 100px;
+			margin-top: 150px;
+			float: right;
+			background-color: cornsilk;
+			width: 300px;
+			padding: 20px;
+		}
+		
+		.orderSummary button {
+			width: 200px;
+			background-color: #eee;
+			height: 30px;
+			margin-left: 50px;
+		}
+	</style>
+</head>
+<body>
+	<div class="header">
+		<div class="inner-header">
+			<div class="logo-container">
+				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore">The<span>BookStore</span></a>
+			</div>
+			<ul class="nav-container">
+				<a href=""><li>Cart</li></a>
+			</ul>
+			
+			<!--
+			<ul class="search-container">
+				<a><li><INPUT type="text" id="search" name="search" placeholder="Search..."/></li></a>
+				<a><li><button type="button">Search</button></li></a>
+			</ul>
+			//-->			
+		</div>
+	</div>
+	
+	
+	<div class="cartItems">
+		<p class="cartList"> List of items in your cart:</p><br/><br/>
+		<p>
+			<c:forEach items="${items}" var="element"> 
+				<div class="product-card">
+				    <div class="product-info">
+						<h5>BID: ${element.bid}</h5>
+				      	<h5>Title: ${element.title}</h5>
+				      	<h8>category: ${element.category}</h8>
+				      	<h6>Price: <f:formatNumber type="currency" >${element.price}</f:formatNumber></h6>
+				      	<FORM action="" method="POST">
+				      		<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
+				      		<button action="submit" name="decrementQuantity" class="decrementQuantity" id="decrementQuantity" value="true">-</button>
+				      	</FORM>
+				      	<h6>Quantity: ${element.quantity}</h6>
+						
+				      	<FORM action="" method="POST">
+				      		<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
+				      		<button action="submit" name="incrementQuantity" class="incrementQuantity" id="incrementQuantity" value="true">+</button>
+				      	</FORM>
+				      	
+				      	<BR/>					
+						
+				      	<FORM action="" method="POST">
+				      		<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
+				      		<button action="submit" name="removeFromCart" class="removeFromCart" id="removeFromCart" value="true">Remove From Cart</button>
+				      	</FORM>
+				      	
+				    </div>
+				</div>
+			</c:forEach>
+		</p>
+	</div>
+	<div class="orderSummary">
+		<p style="font-size: 150%; font-weight: bold;">Order Summary</p><br/>
+		<p>Subtotal: <span style="display: inline; margin-left: 130px;"><f:formatNumber type="currency" >${subtotalPrice}</f:formatNumber></span></p><br/>
+		<p>Shipping: <span style="display: inline; margin-left: 125px;"><f:formatNumber type="currency" >${shippingPrice}</f:formatNumber></span></p><br/>
+		<p>Tax: <span style="display: inline; margin-left: 160px;"><f:formatNumber type="currency" >${taxPrice}</f:formatNumber></span></p><br/>
+		<hr></hr><br/>
+		<p style="font-weight: bold;">Total: <span style="display: inline; margin-left: 150px;"><f:formatNumber type="currency" >${totalPrice}</f:formatNumber></span></p><br/>
+		<hr></hr><br/>
+		<FORM action="checkout" method="POST" class="cartButton">
+			<button action="submit" name="cartButton" class="cartButton" id="cartButton" value="true">Proceed to Checkout</button>
+		</FORM>
+	</div>
+	
+	<!-- 
+		need to make the order summary a form 
+	 -->
+
+</body>
+</html>
+</jsp:root>

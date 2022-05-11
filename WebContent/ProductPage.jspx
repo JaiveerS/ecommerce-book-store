@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=ISO-8859-1" 
+		pageEncoding="ISO-8859-1" session="true"/>
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<LINK rel="StyleSheet" href="${pageContext.request.contextPath}/res/style.css" type="text/css" title="cse4413" media="screen,print"/>
+	<script type="text/javascript"
+	src="${pageContext.request.contextPath}/res/mc.js">;</script>
+	<title>${info.title}</title>
+	<script>
+		function clearText() {
+			var comment = document.getElementById('bookComment');
+			comment.value= "";
+		}
+	</script>
+	
+<style>
+.flex-container {
+  display: flex;
+  height: 100%;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.flex-container-horizontal {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flex-item{
+  width: 100px;
+  height: 100%;
+  margin: 10px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 25px;
+}
+
+.flex-image{
+  width: 300px;
+  height: 300px;
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+}
+
+.flex-title{
+  width: 300px;
+  margin: 11px;
+  text-align: left;
+  line-height: 30px;
+  font-size: 25px;
+}
+
+.flex-body{
+  width: 300px;
+  margin: 10px;
+  text-align: left;
+  line-height: 15px;
+  font-size: 17px;
+  text-align: justify;
+}
+.flex-item button {
+	border-radius: 3px;
+    background-color: #4CAF50;
+    color: white;
+    border: white;
+    display:block;
+    padding: 15px 32px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    margin: 16px auto !important;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.flex-item button:hover{
+	background-color:green;
+    color: white;
+}
+
+.flex-comment{
+	width:60%;
+	height:100%;
+	display:block;
+	margin: 0 auto;
+}
+
+.w3-input {
+	height: 25px;
+	width: 70px;
+}
+
+.w3-button {
+	margin-bottom: 20px;
+	height: 35px;
+	width: 150px;
+}
+
+.rateText, .bookForm {
+	display: inline;
+}
+
+.bookForm {
+	margin-left: 20px;
+}
+
+.test {
+	margin-left: 270px;
+	margin-bottom: 50px;
+}
+
+.review {
+	font-weight: bold;
+	font-size: 18px;
+	margin-left: 270px;
+	margin-bottom: 20px;
+}
+
+</style>
+</head>
+<body>
+	<div class="header">
+		<div class="inner-header">
+			<div class="logo-container">
+				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore">The<span>BookStore</span></a>
+			</div>
+			<ul class="nav-container">
+				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore/Cart"><li>Cart</li></a>
+			</ul>
+			
+			<!--
+			<ul class="search-container">
+				<a><li><INPUT type="text" id="search" name="search" placeholder="Search..."/></li></a>
+				<a><li><button type="button">Search</button></li></a>
+			</ul>
+			//-->			
+		</div>
+	</div>
+	
+<div class="flex-container">
+  <div class="flex-image"><img src="${pageContext.request.contextPath}/images/book.jpeg" width="300"/></div>
+  <div class="flex-container-horizontal">
+  	<div class="flex-title">${info.title}</div>
+  	<div class="flex-body">Category: ${info.category}</div> 
+    <div class="flex-body">${info.description}</div>
+  </div>
+  <div class="flex-item"><f:formatNumber type="currency" >${info.price}</f:formatNumber><BR />
+	<FORM action="" method="POST" class="addToCart">
+     	<INPUT type="hidden" name="bookBID" value="${info.bid}"/>
+     	<BUTTON action="submit" name="addToCart" value="true">Add to cart</BUTTON>
+	</FORM>
+  </div>
+</div>
+
+<div class="flex-container">
+    <div class="flex-body"><h7>Average Rating: ${avgRating}/5</h7></div>
+</div>
+
+<div class="flex-container">
+    <div class="flex-comment">
+    <br/><br/><p class="rateText">Rate this book</p>
+    	<form class="bookForm" method="POST">
+    					<INPUT type="hidden" name="bid" value="${info.bid}"/>
+						<select name="rating" id="rating" class="w3-input w3-padding-16 w3-border">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+						</select>
+						
+						<br /><br/>
+						<p>Write a Review for this book:</p><br/>
+						<textarea name="bookComment" id="bookComment" rows="5" cols="69" placeholder="Enter your review here!" onclick="clearText();">Enter your review here!</textarea><br/>
+						<br/><input type="submit" name="addReview" value="Submit Review" class="w3-button w3-black"/>
+						<br/>
+			</form>
+    </div> 
+</div>
+<div class="test">${test}</div>
+	<p class="review">Customer Reviews: </p>
+			<c:forEach items="${reviews}" var="element"> 
+				<div class="product-card">
+				    <div class="product-info">
+						<h5>Name: ${element.firstname} ${element.lastname}</h5>
+				      	<h5>Rating: ${element.rating}</h5>
+				      	<h8>Review: ${element.review}</h8>
+				    </div>
+				</div>
+			</c:forEach>
+
+</body>
+</html>
+</jsp:root>

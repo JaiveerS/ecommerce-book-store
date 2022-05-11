@@ -1,0 +1,225 @@
+@charset "ISO-8859-1";
+*{
+	margin:0;
+	padding:0;
+	list-style:none;
+	text-decoration:none;
+} 
+
+.header{
+	width:100%;
+	height:80px;
+	display:block;
+	background-color:#101010;
+}
+
+.inner-header{
+	width:75%;
+	height:100%;
+	display:block;
+	margin: 0 auto;
+}
+
+.logo-container{
+	height:100%;
+	display:table;
+	float:left;
+	margin-right:100px;
+}
+
+.logo-container a{
+	font-family: Georgia, serif;
+	color:white;
+	height:100%;
+	display: table-cell;
+	vertical-align:middle;
+	font-size:20px;
+	font-weight: 100;
+}
+
+.logo-container a span{
+	font-weight: 500;
+}
+
+.search-container{
+	float:left;
+	height:100%;
+}
+
+.search-container a{
+	height:100%;
+	display:table;
+	float:left;
+	padding:0px 0px;
+}
+
+.search-container a li{
+	display:table-cell;
+	vertical-align:middle;
+	height:100%;
+	color:white;
+}
+
+.search-container a li input{
+	height:50%;
+	font-size:12px;
+	padding: 0px 5px;
+	width: 300px;
+	background:#f1f1f1;
+	border:1px solid grey;
+}
+
+.search-container a li button{
+	height:51%;
+	font-size:12px;
+	padding: 0px 5px;
+	background:#f1f1f1;
+	color:black;
+	border:1px solid grey;
+	border-left:none;
+	cursor:pointer;
+}
+
+.nav-container{
+	float:right;
+	height:100%;
+}
+
+.nav-container a{
+	height:100%;
+	display:table;
+	float:left;
+	padding:0px 10px;
+}
+
+.nav-container a li{
+	display:table-cell;
+	vertical-align:middle;
+	height:100%;
+	color:white;
+}
+
+.products {
+  margin:0 auto;
+  width:75%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.product-card {
+  padding: 3%;
+  flex-grow: 1;
+  flex-basis: 19%;
+  display: flex;
+  justify-content: center;
+}
+
+.product-info {
+  margin-top: auto;
+}
+
+.clickable h5,h6,h8{
+	color:black;
+	font-size:16px;
+	line-height:1.5;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.product-info img{
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+}
+
+.product-info button {
+	border-radius: 3px;
+    background-color: #4CAF50;
+    color: white;
+    border: white;
+    display:block;
+    padding: 15px 32px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
+    margin: 16px auto !important;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.product-info button:hover{
+	background-color:green;
+    color: white;
+}
+
+.menu{
+	width:75%;
+	display:block;
+	margin: 0 auto;
+}
+
+/*FROM W3-SHOOLS*/
+/* Dropdown Button */
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content input {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  border:none;
+  text-align: left;	
+  width:100%;
+  display: block;
+  background-color: #f1f1f1;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content input:hover {background-color: #ddd;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {background-color: #3e8e41;}
+/*FROM W3-SHOOLS*/
+
+
+
+@media (max-width: 920px) {
+  .product-card {
+    flex: 1 21%;
+  }
+}
+
+@media (max-width: 600px) {
+  .product-card {
+    flex: 1 46%;
+  }
+}
+
+

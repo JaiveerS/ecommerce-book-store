@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" 
+		  xmlns:c="http://java.sun.com/jsp/jstl/core" 
+		  xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=ISO-8859-1" 
+		pageEncoding="ISO-8859-1" session="true"/>
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<LINK rel="StyleSheet" href="${pageContext.request.contextPath}/res/style.css" type="text/css" title="cse4413" media="screen,print"/>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/res/mc.js">;</script>
+	<SCRIPT type="text/javascript">
+		function showPassword() {
+		  var input = document.getElementById('loginPassword');
+		  if (input.type == 'password') {
+			    input.type = 'text';
+			  } else {
+				  input.type = 'password';
+			}
+		}
+		
+		function validateCC() {
+			var ok = true;
+			var name = document.getElementById('nameOnCard').value;
+			
+			if (name == ""){
+				alert("Error! You must enter your name on card.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+		
+			var cardNumber = document.getElementById('cardNumber').value;
+			if (cardNumber == ""){
+				alert("Error! You must enter credit card number.");
+				ok = false;
+			}
+			if (!ok){
+				return false;
+			}
+			
+			var month = document.getElementById('month').value;
+			if (month == "MM"){
+				alert("Error! You must select month.");
+				ok = false;
+			}
+			if (!ok){
+				return false;
+			}
+			
+			var year = document.getElementById('year').value;
+			if (year == "YYYY"){
+				alert("Error! You must select year.");
+				ok = false;
+			}
+			if (!ok){
+				return false;
+			}
+			
+			var cvv = document.getElementById('cvv').value;
+			if (cvv == ""){
+				alert("Error! You must enter cvv.");
+				ok = false;
+			}
+			return ok;				
+		}
+		
+		function validateRegistration() {
+			var ok = true;
+			var username = document.getElementById('registerUsername').value;
+			
+			if (username == ""){
+				alert("Error! Username cannot be empty.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+			
+			var password = document.getElementById('registerPassword').value;
+			
+			if (password == ""){
+				alert("Error! Password cannot be empty.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+			
+			var registerFirstName = document.getElementById('registerFirstName').value;
+			if (registerFirstName == ""){
+				alert("Error! First Name cannot be empty.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+			
+			var registerLastName = document.getElementById('registerLastName').value;
+			if (registerLastName == ""){
+				alert("Error! Last Name cannot be empty.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+			
+			var registerStreet = document.getElementById('registerStreet').value;
+			if (registerStreet == ""){
+				alert("Error! Street Number cannot be empty.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+			
+			var registerCity = document.getElementById('registerCity').value;
+			if (registerCity == ""){
+				alert("Error! City cannot be empty.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+			
+			var registerProvince = document.getElementById('registerProvince').value;
+			if (registerProvince == ""){
+				alert("Error! Province cannot be empty.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+			
+			var registerPostalCode = document.getElementById('registerPostalCode').value;
+			if (registerPostalCode == ""){
+				alert("Error! Postal Code cannot be empty.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+			
+			var registerCountry = document.getElementById('registerCountry').value;
+			if (registerCountry == "Select Country"){
+				alert("Error! Please select a country from the list.");
+				ok = false;
+			}
+			
+			return ok;
+		}
+		
+		function validateLogin() {
+			var ok = true;
+			var username = document.getElementById('paymentUsername').value;
+			
+			if (username == ""){
+				alert("Error! Username cannot be empty.");
+				ok = false;
+			}
+			if (!ok) {
+				return false;
+			}
+			
+			var password = document.getElementById('loginPassword').value;
+			
+			if (password == ""){
+				alert("Error! Password cannot be empty.");
+				ok = false;
+			}
+			return ok;
+		}
+		
+	</SCRIPT>
+	<STYLE>
+		legend {
+			font-size: 120%;
+			padding-left: 1em;
+			padding-right: 1em;
+			border: 1px solid black;
+			font-weight: bold;
+			height: 30px;
+		}
+		
+		button {
+			width:145px;
+    		height:30px;
+    		background-color: #eee;
+    		font-weight: bold;
+    		margin-bottom: 5px;	
+    		height: 30px;
+		}
+		
+		.payment-login-or-create {
+			margin-top: 150px;
+			margin-left: 450px;
+			font-weight: bold;
+			font-size: 20px;
+		}
+		
+		.payment-login-or-create p {
+			color: red;
+		}
+
+		.loginButton,
+		.createButton {
+			display: inline-block;
+		}		
+		
+		.createButton {
+			margin-left: 50px;
+		}
+		
+		.loginButton button,
+		.createButton button{
+			width: 185px;
+			height: 35px;
+		}
+		
+		.paymentLogin {
+			padding: 10px;
+		}
+		
+		.payment-login {
+			margin-top: 150px;
+			margin-left: 500px;
+			width: 300px;
+			display: grid;
+			grid-template-columns: [labels] auto [controls] 1fr [info] 1fr;
+			grid-auto-flow: row;
+			grid-gap: 0.8em;
+			background-color: cornsilk;
+			padding: 0.5em;
+			align-content: center;
+		}
+		
+		.payment-login fieldset {
+			width: 280px;
+			margin-left: 8px;
+			margin-bottom: 15px;
+		}
+		
+		.payment-login input {
+			height: 25px;
+		}
+		
+		.payment-register {
+			margin-left: 400px;
+			margin-top: 150px;
+			margin-bottom: 100px;
+			width: 580px;
+			display: grid;
+			grid-template-columns: [labels] auto [controls] 1fr [info] 1fr;
+			grid-auto-flow: row;
+			grid-gap: 0.8em;
+			background-color: cornsilk;;
+			padding: 0.5em;
+			align-content: center;
+		} 
+		
+		.payment-register fieldset {
+			width: 575px;
+		}
+		
+		.payment-register input {
+			height: 25px;
+			margin-left: 10px;
+		}
+		
+		.payment-register select {
+			height: 28px;
+			margin-left: 10px;
+			width: 170px;
+			margin-top: 20px;
+		}
+		
+		.payment-register label {
+			margin-left: 10px;
+		}
+		
+		.fName {
+			float: left;
+		}
+		
+		.lName {
+			float: right;
+			margin-right: 10px;
+		}
+		
+		.fName input,
+		.lName input {
+			width: 250px;
+		}
+		
+		.address {
+			margin-top: 70px;
+		}
+		
+		.address input {
+			width: 550px;
+		}
+		
+		.city, .province, .postalCode {
+			display: inline-block;
+		}	
+	
+		.country {
+			float: left;
+		}
+		
+		.phone {
+			float: right;
+			margin-right: 120px;
+		}
+		
+		.createAccountButton {
+			margin-left: 10px;
+			margin-top: 30px;
+			margin-bottom: 30px;
+			width: 550px;
+			height: 35px;
+		}
+		
+		.creditCard {
+			border: 1px solid black;
+			padding: 10px;
+			width: 365px;
+			margin-left: 470px; 
+			margin-top: 150px; 
+			margin-bottom: 100px;
+			background-color: cornsilk;
+		}
+		
+		.creditCard label {
+			margin-top: 30px;
+		}
+		
+		.creditCard input {
+			margin-top: 10px;
+			width: 350px;
+			height: 25px;
+		}
+		
+		.creditCard select {
+			width: 90px;
+			height: 25px;
+			margin-right: 20px;
+			margin-top: 10px;
+		}
+		
+		</STYLE>
+	<title>Payment Page</title>
+</head>
+<body>
+	<div class="header">
+		<div class="inner-header">
+			<div class="logo-container">
+				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore">The<span>BookStore</span></a>
+			</div>
+			<ul class="nav-container">
+				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore/Cart" name="cart" value="true"><li>Cart</li></a>
+			</ul>
+			
+			<!--
+			<ul class="search-container">
+				<a><li><INPUT type="text" id="search" name="search" placeholder="Search..."/></li></a>
+				<a><li><button type="button">Search</button></li></a>
+			</ul>
+			//-->			
+		</div>
+	</div>
+			
+	<c:choose>
+		<c:when test="${isNotLoggedIn}">
+			<div class="payment-login-or-create">
+			<p>Please Login or Create a new Account to proceed!</p><br/><br/>
+			<div class="loginButton">
+					<form action="" method="POST">
+						<button action="submit" name="payment-login" id="payment-login" value="true">Login</button><br/><br/>
+					</form>
+			</div>
+			<div class="createButton">
+				<form action="" method="POST">
+					<button action="submit" name="payment-register" id="payment-register" value="true">Create Account</button><br/><br/>
+				</form>
+			</div>
+		</div>
+		</c:when>
+		<c:when test="${isPaymentLogin}">
+			<div class="payment-login">
+				<form action="" method="POST" onsubmit="return validateLogin();">
+				<fieldset>
+				<legend>Login</legend><br/>
+					<div class="paymentLogin">
+						<label for="paymentUsername">Username:</label><br/>
+						<input type="text" name="paymentUsername" id="paymentUsername"></input><br/><br/>
+						<label for="paymentPassword">Password:</label><br/>
+						<input type="password" name="loginPassword" id="loginPassword"></input><br/>
+						<input  type="checkbox" onclick="showPassword()"></input>
+						<label style="vertical-align: 40%; margin-left: 5px;">Show Password</label><br/><br/>
+						<button action="submit" name="payment-login" id="payment-login">Login</button><br/>
+					</div>
+				</fieldset>
+				</form>
+			</div>
+		</c:when>
+		<c:when test="${isPaymentRegister}">
+			<div>
+			<form class="payment-register" method="POST" onsubmit="return validateRegistration();">
+				<fieldset>
+				<legend>Create Account</legend><br/>
+					<label for="username">Username<small>*</small></label><br/>
+					<input type="text" name="registerUsername" id="registerUsername"></input><br/><br/>
+					<label for="username">Password<small>*</small></label><br/>
+					<input type="password" name="registerPassword" id="registerPassword"></input><br/><br/>
+					<p style="font-weight: bold; margin-left: 10px;">Billing and Shipping Information:</p><br/>
+					<p class="fName">
+						<label for="firstname">First Name<small>*</small></label><br/>
+						<input type="text" name="registerFirstName" id="registerFirstName"></input>
+					</p>
+					<p class="lName">
+						<label for="lastname">Last Name<small>*</small></label><br/>
+						<input type="text" name="registerLastName" id="registerLastName"></input>
+					</p>
+					<p class="address">
+						<label for="streetNumber">Address (Street Number)<small>*</small></label><br/>
+						<input type="text" name="registerStreet" id="registerStreet"></input><br/><br/>
+						<label for="username">Address Line 2</label><br/>
+						<input type="text" name="registerAddress2" id="registerAddress2"></input>
+					</p>
+					<p class="city"><br/>
+						<label for="username">City<small>*</small></label><br/>
+						<input type="text" name="registerCity" id="registerCity"></input>
+					</p>
+					<p class="province">
+						<label for="username">Province<small>*</small></label><br/>
+						<input type="text" name="registerProvince" id="registerProvince"></input>
+					</p>
+					<p class="postalCode">
+						<label for="username">Postal Code<small>*</small></label><br/>
+						<input type="text" name="registerPostalCode" id="registerPostalCode" placeholder="XXX XXX"></input>
+					</p>
+					<p class="country"><br/>
+						<label for="country">Country<small>*</small></label>
+						<select name="registerCountry" id="registerCountry">
+							<option selected="selected">Select Country</option>
+							<option>Canada</option>
+							<option>USA</option>
+							<option>Mexico</option>
+							<option>India</option>
+							<option>China</option>
+							<option>Germany</option>
+							<option>France</option>
+						</select>
+					</p>
+					<p class="phone"><br/>
+						<label for="phone">Phone Number</label><br/>
+						<input type="text" name="registerPhone" id="registerPhone"></input>
+					</p>
+					<button action="submit" name="createAccountButton" id="createAccountButton" value="true" class="createAccountButton">Create Account</button><br/>
+				</fieldset>
+			</form>
+			</div>
+		</c:when>
+		<c:otherwise>
+			<div class="creditCard">
+			<p style="font-weight: bold; font-size: 120%;">Credit Card Information:</p><br/>
+			<form method="POST" onsubmit="return validateCC();">
+				<label for="nameOnCard">Name on Card<small>*</small></label><br/>
+				<input type="text" name="nameOnCard" id="nameOnCard" placeholder="Name on Card"></input><br/><br/>
+				<label for="cardNumber">Card Number<small>*</small></label><br/>
+				<input type="text" name="cardNumber" id="cardNumber" placeholder="XXXXXXXXXXXXXXXX"></input><br/><br/>
+				<label for="expiry-date">Expiry Date<small>*</small>
+				<span style="display: inline; margin-left: 200px;">CVV<small>*</small></span></label><br/>
+					<select name="month" id="month">
+						<option selected="selected">MM</option>
+						<option>01</option>
+						<option>02</option>
+						<option>03</option>
+						<option>04</option>
+						<option>05</option>
+						<option>06</option>
+						<option>07</option>
+						<option>08</option>
+						<option>09</option>
+						<option>10</option>
+						<option>11</option>
+						<option>12</option>
+					</select>			
+					<select name="year" id="year">
+						<option selected="selected">YYYY</option>
+						<option>2020</option>
+						<option>2021</option>
+						<option>2022</option>
+						<option>2023</option>
+						<option>2024</option>
+						<option>2025</option>
+						<option>2026</option>
+						<option>2027</option>
+					</select>
+					<input style="width: 65px; height: 25px; margin-left: 65px;" type="text" placeholder="XXXX" id="cvv"></input><br/><br/>
+					<button action="submit" style="width: 200px;" name="paymentButton" id="paymentButton">Continue to proceed</button>
+				</form>
+			</div>		
+		</c:otherwise>
+	</c:choose>	
+	
+	${test}
+</body>
+</html>
+</jsp:root>

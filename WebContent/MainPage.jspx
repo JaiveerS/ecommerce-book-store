@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:f="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:directive.page contentType="text/html; charset=ISO-8859-1" 
+		pageEncoding="ISO-8859-1" session="true"/>
+	<jsp:output doctype-root-element="html"
+		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+		omit-xml-declaration="true" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<LINK rel="StyleSheet" href="${pageContext.request.contextPath}/res/style.css" type="text/css" title="cse4413" media="screen,print"/>
+	<script type="text/javascript"
+	src="${pageContext.request.contextPath}/res/mc.js">;</script>
+	<title>The Book Store</title>
+</head>
+<body>
+	<div class="header">
+		<div class="inner-header">
+			<div class="logo-container">
+				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore">The<span>BookStore</span></a>
+			</div>
+			<ul class="nav-container">
+				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore/Cart" name="cart" value="true"><li>Cart</li></a>
+			</ul>
+			<ul class="nav-container">
+				${logout}
+			</ul>
+			<!--
+			<ul class="search-container">
+				<a><li><INPUT type="text" id="search" name="search" placeholder="Search..."/></li></a>
+				<a><li><button type="button">Search</button></li></a>
+			</ul>
+			//-->			
+		</div>
+	</div>
+	
+	<FORM action="" method="POST" class="form">
+		<div class="menu">
+			<div class="dropdown">
+				<h8 class="dropbtn">Filter by category</h8>
+				<div class="dropdown-content">
+				  	<input type="submit" value="View All"></input>
+				  	<input type="submit" name="category" value="Engineering"></input>
+				  	<input type="submit" name="category" value="Fiction"></input>
+				  	<input type="submit" name="category" value="Science"></input>
+			  	</div>
+			</div>
+			<h5>Current Category: ${category}</h5>
+		</div>
+	</FORM>
+	
+	<div class="body">
+		<section class="products">
+		<c:forEach items="${books}" var="element"> 
+			<div class="product-card">
+			    <div class="product-info">
+			      <a href="https://eCommerceBookStore.mybluemix.net/Bookstore/Product?bid=${element.bid}" class="clickable">
+			      	<img src="${pageContext.request.contextPath}/images/book.jpeg" width="200"/>
+			      	<h5>${element.title}</h5>
+			      	<h8>category: ${element.category}</h8>
+			      	<h6><f:formatNumber type="currency" >${element.price}</f:formatNumber></h6>
+			      </a>
+			      
+			      <FORM action="Bookstore" method="POST" class="addToCart">
+			      		<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
+			      		<BUTTON action="submit" name="addToCart" value="true">Add to cart</BUTTON>
+			      </FORM>
+			      
+			    </div>
+			</div>
+		</c:forEach>
+		</section>
+	</div>
+</body>
+</html>
+</jsp:root>
