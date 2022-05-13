@@ -14,37 +14,80 @@
 	src="${pageContext.request.contextPath}/res/mc.js">;</script>
 	<title>Cart</title>
 	<style>
-		.cartItems {
-			margin-left: 100px;
-			margin-top: 150px;
-			float: left;
-			background-color: cornsilk;
+		.container{
+			display:flex;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+		}
+
+		.product-info{
+			display:flex;
+			background: white;
 			padding: 20px;
-			width: 700px;
+		}
+
+		.info{
+			text-align: center;
+		}
+
+		.info-right{
+			color:red;
+		}
+
+		.quantity{
+			display: flex;
+			justify-content: center;
+		}
+
+		.text-quantity{
+			display: flex;
+			justify-content: center;
+			font-size: 15px;
+			padding: 20px;
+			text-align: center;
+		}
+
+		.form,.form2{
+			display: flex;
+			justify-content: center;
+		}
+
+		.form button{
+			padding: 10px;
+			height: 50%;
+			margin-top: 30px;
+		}
+
+		.form2 button{
+			padding: 10px;
+			height: 50%;
+			margin-top: 30px;
+			margin-left: 10px;
+
+		}
+
+		.cartItems {
+			background-color: gray;
+			min-width: 50%;
+			padding: 10px;
+			border: 1px solid #2d2d2d;
+			margin-right:10px;
 		}
 		
 		.cartList {
 			font-weight: bold;
 			font-size: 20px;
-			margin-top: 20px;
-			margin-left: 100px;
 		}
 		
 		.orderSummary {
-			margin-right: 100px;
-			margin-top: 150px;
-			float: right;
-			background-color: cornsilk;
-			width: 300px;
+			<!-- background-color: green; -->
 			padding: 20px;
+			border: 1px solid #2d2d2d;
+			margin-left:10px;
+			max-width: 30%;
 		}
 		
-		.orderSummary button {
-			width: 200px;
-			background-color: #eee;
-			height: 30px;
-			margin-left: 50px;
-		}
 	</style>
 </head>
 <body>
@@ -66,53 +109,59 @@
 		</div>
 	</div>
 	
-	
-	<div class="cartItems">
-		<p class="cartList"> List of items in your cart:</p><br/><br/>
-		<p>
-			<c:forEach items="${items}" var="element"> 
-				<div class="product-card">
-				    <div class="product-info">
-						<h5>BID: ${element.bid}</h5>
-				      	<h5>Title: ${element.title}</h5>
-				      	<h8>category: ${element.category}</h8>
-				      	<h6>Price: <f:formatNumber type="currency" >${element.price}</f:formatNumber></h6>
-				      	<FORM action="" method="POST">
-				      		<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
-				      		<button action="submit" name="decrementQuantity" class="decrementQuantity" id="decrementQuantity" value="true">-</button>
-				      	</FORM>
-				      	<h6>Quantity: ${element.quantity}</h6>
-						
-				      	<FORM action="" method="POST">
-				      		<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
-				      		<button action="submit" name="incrementQuantity" class="incrementQuantity" id="incrementQuantity" value="true">+</button>
-				      	</FORM>
-				      	
-				      	<BR/>					
-						
-				      	<FORM action="" method="POST">
-				      		<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
-				      		<button action="submit" name="removeFromCart" class="removeFromCart" id="removeFromCart" value="true">Remove From Cart</button>
-				      	</FORM>
-				      	
-				    </div>
-				</div>
-			</c:forEach>
-		</p>
+	<div class="container">
+		<div class="cartItems">
+			<p class="cartList"> List of items in your cart:</p><br/>
+			<p>
+				<c:forEach items="${items}" var="element"> 
+					<div class="product-card">
+						<div class="product-info">
+							<div class="info">
+								<div class="info-left">
+									<h5>BID: ${element.bid}</h5>
+									<h5>Title: ${element.title}</h5>
+									<h5>category: ${element.category}</h5>
+								</div>
+								<div class="info-right">
+									<h6>Price: <f:formatNumber type="currency" >${element.price}</f:formatNumber></h6>
+								</div>
+							</div>
+							<div class="quantity">
+								<FORM class="form" action="" method="POST">
+									<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
+									<button action="submit" name="decrementQuantity" class="decrementQuantity" id="decrementQuantity" value="true">-</button>
+								</FORM>
+
+								<h6 class="text-quantity">Quantity: ${element.quantity}</h6>
+
+								<FORM class="form" action="" method="POST">
+									<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
+									<button action="submit" name="incrementQuantity" class="incrementQuantity" id="incrementQuantity" value="true">+</button>
+								</FORM>
+							</div>
+							<FORM class="form2" action="" method="POST">
+								<INPUT type="hidden" name="bookBID" value="${element.bid}"/>
+								<button action="submit" name="removeFromCart" class="removeFromCart" id="removeFromCart" value="true">Remove From Cart</button>
+							</FORM>
+							
+						</div>
+					</div>
+				</c:forEach>
+			</p>
+		</div>
+		<div class="orderSummary">
+			<p style="font-size: 150%; font-weight: bold;">Order Summary</p><br/>
+			<p>Subtotal: <span style="display: inline;"><f:formatNumber type="currency" >${subtotalPrice}</f:formatNumber></span></p><br/>
+			<p>Shipping: <span style="display: inline;"><f:formatNumber type="currency" >${shippingPrice}</f:formatNumber></span></p><br/>
+			<p>Tax: <span style="display: inline;"><f:formatNumber type="currency" >${taxPrice}</f:formatNumber></span></p><br/>
+			<hr></hr><br/>
+			<p style="font-weight: bold;">Total: <span style="display: inline;"><f:formatNumber type="currency" >${totalPrice}</f:formatNumber></span></p><br/>
+			<hr></hr><br/>
+			<FORM action="checkout" method="POST" class="form2">
+				<button action="submit" name="cartButton" class="cartButton" id="cartButton" value="true">Proceed to Checkout</button>
+			</FORM>
+		</div>
 	</div>
-	<div class="orderSummary">
-		<p style="font-size: 150%; font-weight: bold;">Order Summary</p><br/>
-		<p>Subtotal: <span style="display: inline; margin-left: 130px;"><f:formatNumber type="currency" >${subtotalPrice}</f:formatNumber></span></p><br/>
-		<p>Shipping: <span style="display: inline; margin-left: 125px;"><f:formatNumber type="currency" >${shippingPrice}</f:formatNumber></span></p><br/>
-		<p>Tax: <span style="display: inline; margin-left: 160px;"><f:formatNumber type="currency" >${taxPrice}</f:formatNumber></span></p><br/>
-		<hr></hr><br/>
-		<p style="font-weight: bold;">Total: <span style="display: inline; margin-left: 150px;"><f:formatNumber type="currency" >${totalPrice}</f:formatNumber></span></p><br/>
-		<hr></hr><br/>
-		<FORM action="checkout" method="POST" class="cartButton">
-			<button action="submit" name="cartButton" class="cartButton" id="cartButton" value="true">Proceed to Checkout</button>
-		</FORM>
-	</div>
-	
 	<!-- 
 		need to make the order summary a form 
 	 -->
