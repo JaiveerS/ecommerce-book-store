@@ -27,7 +27,7 @@
 <body>
 	<div class="container">
 		<p class="success">${msg}</p>
-		<p class="continue"> <a href="https://eCommerceBookStore.mybluemix.net/Bookstore">Continue shopping here!</a></p>
+		<p class="continue"> <a href="/Bookstore">Continue shopping here!</a></p>
 	</div>
 	
 </body>

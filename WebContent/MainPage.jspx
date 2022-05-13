@@ -19,10 +19,10 @@
 	<div class="header">
 		<div class="inner-header">
 			<div class="logo-container">
-				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore">The<span>BookStore</span></a>
+				<a href="/Bookstore">The<span>BookStore</span></a>
 			</div>
 			<ul class="nav-container">
-				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore/Cart" name="cart" value="true"><li>Cart</li></a>
+				<a href="/Bookstore/Cart" name="cart" value="true"><li>Cart</li></a>
 			</ul>
 			<ul class="nav-container">
 				${logout}
@@ -56,7 +56,7 @@
 		<c:forEach items="${books}" var="element"> 
 			<div class="product-card">
 			    <div class="product-info">
-			      <a href="https://eCommerceBookStore.mybluemix.net/Bookstore/Product?bid=${element.bid}" class="clickable">
+			      <a href="/Bookstore/Product?bid=${element.bid}" class="clickable">
 			      	<img src="${pageContext.request.contextPath}/images/book.jpeg" width="200"/>
 			      	<h5>${element.title}</h5>
 			      	<h8>category: ${element.category}</h8>

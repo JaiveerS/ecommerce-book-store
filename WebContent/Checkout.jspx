@@ -143,7 +143,7 @@
 	<div class="header">
 		<div class="inner-header">
 			<div class="logo-container">
-				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore">The<span>BookStore</span></a>
+				<a href="/Bookstore">The<span>BookStore</span></a>
 			</div>
 			<ul class="nav-container">
 				<a href=""><li>Cart</li></a>

@@ -24,9 +24,9 @@
 <style>
 .flex-container {
   display: flex;
-  height: 100%;
   align-items: flex-start;
   justify-content: center;
+  min-width:100%;
 }
 
 .flex-container-horizontal {
@@ -136,10 +136,10 @@
 	<div class="header">
 		<div class="inner-header">
 			<div class="logo-container">
-				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore">The<span>BookStore</span></a>
+				<a href="/Bookstore">The<span>BookStore</span></a>
 			</div>
 			<ul class="nav-container">
-				<a href="https://eCommerceBookStore.mybluemix.net/Bookstore/Cart"><li>Cart</li></a>
+				<a href="Bookstore/Cart"><li>Cart</li></a>
 			</ul>
 			
 			<!--
