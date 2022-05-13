@@ -25,6 +25,8 @@
 			display:flex;
 			background: white;
 			padding: 20px;
+			border-top: 3px solid #bbb;
+			justify-content: space-around;
 		}
 
 		.info{
@@ -68,11 +70,12 @@
 		}
 
 		.cartItems {
-			background-color: gray;
+			<!-- background-color: gray; -->
 			min-width: 50%;
 			padding: 10px;
 			border: 1px solid #2d2d2d;
 			margin-right:10px;
+			align-self: start;
 		}
 		
 		.cartList {
@@ -86,6 +89,7 @@
 			border: 1px solid #2d2d2d;
 			margin-left:10px;
 			max-width: 30%;
+			align-self: start;
 		}
 		
 	</style>
