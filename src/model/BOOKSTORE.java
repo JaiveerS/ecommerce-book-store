@@ -1,6 +1,7 @@
 package model;
 
 
+import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -41,27 +42,11 @@ public class BOOKSTORE {
 		return instance;
 	}
 	
-	private BOOKSTORE() {		
-		try {
-			book = new BookDAO();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("failed to make BOOKDAO");
-		}
-		try {
-			user = new UserDAO();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private BOOKSTORE() throws ClassNotFoundException {		
+		book = new BookDAO();
+		user = new UserDAO();
 		
-		try {
-			order= new OrderDAO();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		order= new OrderDAO();
 		
 	}
 	
@@ -71,18 +56,30 @@ public class BOOKSTORE {
 
 	public Map<String, BookBean> retriveBooksByCategory(String category) throws SQLException {
 		if (validBookCategory(category)) {
-			return book.retrieveBooksByCategory(category);
+			try {
+				return book.retrieveBooksByCategory(category);
+			} catch (SQLException | URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else {
 			return new HashMap<String,BookBean>();
 		}
+		return null;
 	}
 	
 	public BookBean retrieveBookByBid(String bid) throws SQLException {
-		return book.retrieveBook(bid);
+		try {
+			return book.retrieveBook(bid);
+		} catch (SQLException | URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	// Used for the rest service as JSON output
-	public String exportBookJson(String bid) throws SQLException, JAXBException {
+	public String exportBookJson(String bid) throws SQLException, JAXBException, URISyntaxException {
 		BookInfoBean bean = book.retrieveBookInfoByBid(bid);
 		
 		// Building JSON String from the StudentBean map
@@ -98,11 +95,11 @@ public class BOOKSTORE {
 		return jsonArray.toString();
 	}
 
-	public BookInfoBean retrieveBookInfo(String bid) throws SQLException {
+	public BookInfoBean retrieveBookInfo(String bid) throws SQLException, URISyntaxException {
 		return book.retrieveBookInfoByBid(bid);
 	}
 	
-	public AccountBean retrieveAccountForValidation(String Username) throws NoSuchAlgorithmException, SQLException {
+	public AccountBean retrieveAccountForValidation(String Username) throws NoSuchAlgorithmException, SQLException, URISyntaxException {
 		if(Username == null) {
 			return null;
 		}else {
@@ -110,7 +107,7 @@ public class BOOKSTORE {
 		}
 	}
 	
-	public AccountCreatedBean retrieveUserInfo(String Username) throws NoSuchAlgorithmException, SQLException {
+	public AccountCreatedBean retrieveUserInfo(String Username) throws NoSuchAlgorithmException, SQLException, URISyntaxException {
 		if(Username == null) {
 			return null;
 		}else {
@@ -140,7 +137,7 @@ public class BOOKSTORE {
 		return category.matches("[A-Z][a-z]*");
 	}
 	
-	public String insertUser(String username, String hash) {
+	public String insertUser(String username, String hash) throws URISyntaxException {
 		String userID = username;
 		
 		if(validateUsername(userID)) {
@@ -158,7 +155,7 @@ public class BOOKSTORE {
 	}
 	
 
-	public String deleteUser(String username) {
+	public String deleteUser(String username) throws URISyntaxException {
 		String userID = username;
 		
 		if(validateUsername(userID)) {
@@ -224,13 +221,17 @@ public class BOOKSTORE {
 				return String.valueOf(result);
 			} catch (SQLException e) {
 				return "0 : (entry with same userID already exists!)" + e + test;
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} 
 		}else {
 			return "0 : (Invalid Inputs)";
 		}
+		return phone;
 	}
 	
-	public int insertAddress(String street, String province, String country, String zip, String phone) {
+	public int insertAddress(String street, String province, String country, String zip, String phone) throws URISyntaxException {
 		try {
 			return order.insertAddress(street, province, country, zip, phone);
 		} catch (SQLException e) {
@@ -241,7 +242,7 @@ public class BOOKSTORE {
 	}
 	
 	///FIX THIS
-	public int insertBillingAddress(String street, String province, String country, String zip, String phone, String comment) {
+	public int insertBillingAddress(String street, String province, String country, String zip, String phone, String comment) throws URISyntaxException {
 		try {
 			return order.insertBillingAddress(street, province, country, zip, phone, comment);
 		} catch (SQLException e) {
@@ -251,7 +252,7 @@ public class BOOKSTORE {
 		}
 	}
 	
-	public String retrieveAddressID(String street, String province, String country, String zip, String phone) {
+	public String retrieveAddressID(String street, String province, String country, String zip, String phone) throws URISyntaxException {
 		try {
 			return order.retrieveAddressNumber(street, province, country, zip);
 		} catch (SQLException e) {
@@ -261,7 +262,7 @@ public class BOOKSTORE {
 		}
 	}
 
-	public String exportAllPurchase(String bid) throws SQLException, JAXBException {
+	public String exportAllPurchase(String bid) throws SQLException, JAXBException, URISyntaxException {
 		List<OrderItemBean> itemBean = order.purchasedBookOrders(bid);
 		
 		// Building JSON String for all purchased book by bid		
@@ -358,7 +359,7 @@ public class BOOKSTORE {
 //		return s.replaceAll("[\\W+]", "");
 //	}
 
-	public String insertPO(String last, String first, String status, String id) {
+	public String insertPO(String last, String first, String status, String id) throws URISyntaxException {
 		String result = "1";
 		try {
 			order.insertPO(last, first, status, id);
@@ -370,7 +371,7 @@ public class BOOKSTORE {
 		return result;
 	}
 
-	public String insertPOitem(String id, String bookID, int p, int quantity) {
+	public String insertPOitem(String id, String bookID, int p, int quantity) throws URISyntaxException {
 		String result = "1";
 		try {
 			order.insertPOitem(id, bookID, p, quantity);
@@ -384,7 +385,13 @@ public class BOOKSTORE {
 	}
 	
 	public List<BookReviewBean> retrieveBookReviewsByBID(String bid) throws SQLException {
-		return book.retrieveReviewsByBID(bid);
+		try {
+			return book.retrieveReviewsByBID(bid);
+		} catch (SQLException | URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public int insertReview(String bookID, String firstname, String lastname, String rating, String review) {
@@ -401,10 +408,14 @@ public class BOOKSTORE {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return 0;
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}else {
 			return 0;
 		}
+		return r;
 	}
 	
 	public boolean validateReview(String review) {

@@ -1,7 +1,10 @@
 package dao;
 
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,19 +22,25 @@ import bean.OrderItemBean;
 
 public class OrderDAO {
 	
-	private DataSource ds;
-
-	public OrderDAO() throws ClassNotFoundException {
+	private static Connection getConnection() throws URISyntaxException, SQLException {
 		try {
-			ds = (DataSource) (new InitialContext()).lookup("jdbc/Db2-EECS4413");
-		} catch (NamingException e) {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+	    String username = dbUri.getUserInfo().split(":")[0];
+	    String password = dbUri.getUserInfo().split(":")[1];
+	    String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+
+	    return DriverManager.getConnection(dbUrl, username, password);
 	}
 	
-	public AddressBean getAddressById (int addressId) throws SQLException {
+	public AddressBean getAddressById (int addressId) throws SQLException, URISyntaxException {
 		String addressQuery = "SELECT * FROM PO, ADDRESS WHERE ADDRESS.ID=? AND PO.ID=?";
-		Connection con = this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement stmt = con.prepareStatement(addressQuery);
 		stmt.setInt(1, addressId);
 		stmt.setInt(2, addressId);
@@ -57,11 +66,11 @@ public class OrderDAO {
 		return addressBean;
 	}
 	
-	public AddressBean retirveAddressByBid(String bid) throws SQLException {
+	public AddressBean retirveAddressByBid(String bid) throws SQLException, URISyntaxException {
 		String query = "SELECT * FROM BOOK, PO, POITEM, ADDRESS WHERE BOOK.BID=? "
 				+ "AND POITEM.BID=? AND PO.ID=POITEM.ID AND  ADDRESS.ID=PO.ID";
 		AddressBean address = null;
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		p.setString(1,bid);
 		p.setString(2,bid);
@@ -85,10 +94,10 @@ public class OrderDAO {
 		return address;		
 	}
 	
-	public String getCommentByBid(String bid) throws SQLException {
+	public String getCommentByBid(String bid) throws SQLException, URISyntaxException {
 		String query = "SELECT COMMENT FROM PO, POItem, BILLINGADDRESS WHERE PO.ID=POItem.ID AND POItem.BID=? AND BILLINGADDRESS.ID=PO.ID";
 		
-		Connection con = this.ds.getConnection();
+		Connection con = getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		p.setString(1, bid);
 		
@@ -98,12 +107,12 @@ public class OrderDAO {
 		return comment;
 	}
 	
-	public List<OrderItemBean> purchasedBookOrders(String bid) throws SQLException {
+	public List<OrderItemBean> purchasedBookOrders(String bid) throws SQLException, URISyntaxException {
 		String query = "SELECT * FROM BOOK, PO, POITEM, BILLINGADDRESS WHERE BOOK.BID=? "
 				+ "AND POITEM.BID=? AND PO.ID=POITEM.ID AND  BILLINGADDRESS.ID=PO.ID";		
 		List<OrderItemBean> bookList = new ArrayList<OrderItemBean>();
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		p.setString(1,bid);
 		p.setString(2, bid);
@@ -142,9 +151,9 @@ public class OrderDAO {
 		return bookList;
 	}
 
-	public List<OrderBean> getOrderByBookId(String bid) throws SQLException {
+	public List<OrderBean> getOrderByBookId(String bid) throws SQLException, URISyntaxException {
 		String query = "SELECT * FROM PO, POItem WHERE PO.ID=POItem.ID AND POItem.BID=?";
-		Connection con = this.ds.getConnection();
+		Connection con = getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		p.setString(1, bid);
 		ResultSet results = p.executeQuery();
@@ -172,10 +181,10 @@ public class OrderDAO {
 		return orderLists;
 	}
 	
-	public int insertAddress(String street, String province, String country, String zip, String phone) throws SQLException {
+	public int insertAddress(String street, String province, String country, String zip, String phone) throws SQLException, URISyntaxException {
 		String query = "INSERT INTO Address (street, province, country, zip, phone) VALUES (?,?,?,?,?)";
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		p.setString(1, street);
@@ -191,10 +200,10 @@ public class OrderDAO {
 		return i;
 	}
 	
-	public String retrieveAddressNumber(String street, String province, String country, String zip) throws SQLException {
+	public String retrieveAddressNumber(String street, String province, String country, String zip) throws SQLException, URISyntaxException {
 		String query = "select ADDRESS.ID FROM ADDRESS where street=? AND province=? AND country=? AND zip=?";
 		
-		Connection con = this.ds.getConnection();
+		Connection con = getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		p.setString(1, street);
 		p.setString(2, province);
@@ -215,10 +224,10 @@ public class OrderDAO {
 		return answer;
 	}
 	
-	public int insertPO(String lname, String fname, String status, String address) throws SQLException {
+	public int insertPO(String lname, String fname, String status, String address) throws SQLException, URISyntaxException {
 		String query = "INSERT INTO PO (lname, fname, status, address)  VALUES (?,?,?,?)";
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		p.setString(1, lname);
@@ -233,10 +242,10 @@ public class OrderDAO {
 		return i;
 	}
 
-	public int insertPOitem(String id, String bookID, int price, int quantity) throws SQLException {
+	public int insertPOitem(String id, String bookID, int price, int quantity) throws SQLException, URISyntaxException {
 		String query = "INSERT INTO POItem (id, bid, price, quantity)  VALUES (?,?,?,?)";
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		p.setString(1, id);
@@ -252,10 +261,10 @@ public class OrderDAO {
 		
 	}
 
-	public int insertBillingAddress(String street, String province, String country, String zip, String phone,String comment) throws SQLException {
+	public int insertBillingAddress(String street, String province, String country, String zip, String phone,String comment) throws SQLException, URISyntaxException {
 		String query = "INSERT INTO BILLINGADDRESS (street, province, country, zip, phone, comment) VALUES (?, ?, ?, ? ,?, ?)";
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		p.setString(1, street);

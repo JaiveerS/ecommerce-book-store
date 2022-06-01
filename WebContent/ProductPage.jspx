@@ -139,7 +139,7 @@
 				<a href="/Bookstore">The<span>BookStore</span></a>
 			</div>
 			<ul class="nav-container">
-				<a href="Bookstore/Cart"><li>Cart</li></a>
+				<a href="/Bookstore/Cart"><li>Cart</li></a>
 			</ul>
 			
 			<!--

@@ -1,6 +1,7 @@
 package ctrl;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -97,6 +98,7 @@ public class Bookstore extends HttpServlet {
 		
 		if (bid != null && model.validateBID(bid)){ //when user wants to access productInfoPage of a specific product
 			
+			System.out.println("IM HERE");
 			//retrieve book info 
 			BookInfoBean book = null;
 			try {
@@ -104,6 +106,9 @@ public class Bookstore extends HttpServlet {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (URISyntaxException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 			
 			if(request.getParameter("addReview") != null) {
@@ -259,7 +264,7 @@ public class Bookstore extends HttpServlet {
 						
 						
 						
-						
+						System.out.println("sending to checkoutpage");
 						request.getRequestDispatcher(checkoutPage).forward(request, response);
 					}else {
 						session.setAttribute("isPaymentLogin", true);
@@ -271,6 +276,9 @@ public class Bookstore extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -324,12 +332,22 @@ public class Bookstore extends HttpServlet {
 			
 				
 				if(acc != null && correct) {
-					resultOne = model.insertUser(acc.getUsername(), acc.getHashOfPass());
+					try {
+						resultOne = model.insertUser(acc.getUsername(), acc.getHashOfPass());
+					} catch (URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if(resultOne != null && resultOne.equals("1")) {
 						resultTwo = model.insertUserInfo(userID, firstName, lastName, address, address2,city, province, postal, country, phone);
 						if(resultTwo != null && !resultTwo.equals("1")) {
 							//remove inserted user
-							model.deleteUser(acc.getUsername());
+							try {
+								model.deleteUser(acc.getUsername());
+							} catch (URISyntaxException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							request.setAttribute("test", "FAILED TO CREATE ACCOUNT!!");
 						}else {
 							request.setAttribute("test", "ACCOUNT CREATED!!");
@@ -539,12 +557,34 @@ public class Bookstore extends HttpServlet {
 				session.setAttribute("msg", "failed to place order");
 				request.getRequestDispatcher(confirmOrderPage).forward(request, response);
 			}else{
-				int i = model.insertAddress(address1, province, country, postal, number);
-				if (i == 1) {
-					model.insertBillingAddress(billingStreet, billingProvince, billingCountry, billingZip, billingPhone, comment);
+				int i = 0;
+				try {
+					i = model.insertAddress(address1, province, country, postal, number);
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				String id = model.retrieveAddressID(address1, province, country, postal, number);
-				model.insertPO(last, first, status, id);
+				if (i == 1) {
+					try {
+						model.insertBillingAddress(billingStreet, billingProvince, billingCountry, billingZip, billingPhone, comment);
+					} catch (URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				String id = null;
+				try {
+					id = model.retrieveAddressID(address1, province, country, postal, number);
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					model.insertPO(last, first, status, id);
+				} catch (URISyntaxException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				
 				session.getAttribute("items");
 				
@@ -555,7 +595,12 @@ public class Bookstore extends HttpServlet {
 						String bookID = item.getBid();
 						int price = item.getPrice();
 						int quantity = item.getQuantity();
-						model.insertPOitem(id, bookID, price, quantity);
+						try {
+							model.insertPOitem(id, bookID, price, quantity);
+						} catch (URISyntaxException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 				}
 				
 				po++;

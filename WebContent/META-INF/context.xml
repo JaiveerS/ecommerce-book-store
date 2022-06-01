@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context privileged="true" reloadable="true">
-	<WatchedResource>WEB-INF/web.xml</WatchedResource>
-	<Manager pathname=""/>
-	<Resource name="jdbc/EECS" 
-	factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" 
-	type="javax.sql.DataSource" 
-	username= "ysh03718"
-	password= "MaEXgU2Eyzk9llII"
-	initialSize="1"
-	maxActive="5"
-	maxIdle="3"
-	driverClassName="com.ibm.db2.jcc.DB2Driver"
-	url="jdbc:db2://ba99a9e6-d59e-4883-8fc0-d6a8c9f7a08f.c1ogj3sd0tgtu0lqde00.databases.appdomain.cloud:31321/bludb"/>
-	<ResourceLink global="jdbc/EECS" name="jdbc/EECS" type="javax.sql.DataSource"/>
+
+<!-- the new database connection pooling stuff -->
+<!-- see: http://tomcat.apache.org/tomcat-5.5-doc/jndi-datasource-examples-howto.html -->
+
+<Context path="/bookstore" docBase="bookstore" crossContext="true" reloadable="true" debug="1">
+
+  <Resource name="jdbc/postgres" auth="Container"
+            type="javax.sql.DataSource"
+            driverClassName="org.postgresql.Driver"
+            url="jdbc:postgres://iojsygngjpzuzf:5bf327d55f1f072a984c154211728f37d302a2f5e2fa0e68acbd8e10b95dea00@ec2-54-211-255-161.compute-1.amazonaws.com:5432/d6om3kmkpb2t0o"
+            username="iojsygngjpzuzf"
+            password="5bf327d55f1f072a984c154211728f37d302a2f5e2fa0e68acbd8e10b95dea00"
+            maxActive="10"
+            maxIdle="5"
+            maxWait="-1"
+            removeAbandoned="true"
+            removeAbandonedTimeout="60"
+            logAbandoned="true"
+            />
+
 </Context>

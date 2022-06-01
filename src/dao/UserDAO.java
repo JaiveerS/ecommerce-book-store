@@ -1,7 +1,10 @@
 package dao;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,22 +17,28 @@ import bean.AccountBean;
 import bean.AccountCreatedBean;
 
 public class UserDAO {
-	DataSource ds;
 	
-	public UserDAO() throws ClassNotFoundException{
-		try{
-			ds = (DataSource) (new InitialContext()).lookup("jdbc/Db2-EECS4413");
-		} catch(NamingException e) {
-				e.printStackTrace();
+	private static Connection getConnection() throws URISyntaxException, SQLException {
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+	    String username = dbUri.getUserInfo().split(":")[0];
+	    String password = dbUri.getUserInfo().split(":")[1];
+	    String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
+
+	    return DriverManager.getConnection(dbUrl, username, password);
 	}
 	
-	
-	public AccountBean retrieveUser(String Username) throws SQLException, NoSuchAlgorithmException {
-		String query = "select * from USER where USERNAME='" + Username + "'";
+	public AccountBean retrieveUser(String Username) throws SQLException, NoSuchAlgorithmException, URISyntaxException {
+		String query = "select * from USERS where USERNAME='" + Username + "'";
 		AccountBean acc = null;
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		ResultSet r = p.executeQuery();
@@ -46,11 +55,11 @@ public class UserDAO {
 		return acc;
 	}
 	
-	public AccountCreatedBean retrieveUserInfo(String Username) throws SQLException, NoSuchAlgorithmException {
-		String query = "SELECT A.USERNAME, A.HASHEDPASSWORD, B.FNAME, B.LNAME, B.ADDRESS,B.ADDRESS2, B.CITY, B.PROVINCE, B.POSTALCODE, B.COUNTRY, B.PHONENUMBER FROM USER A, USERINFO B WHERE A.USERNAME = B.USERNAME AND A.USERNAME='" + Username + "'";
+	public AccountCreatedBean retrieveUserInfo(String Username) throws SQLException, NoSuchAlgorithmException, URISyntaxException {
+		String query = "SELECT A.USERNAME, A.HASHEDPASSWORD, B.FNAME, B.LNAME, B.ADDRESS,B.ADDRESS2, B.CITY, B.PROVINCE, B.POSTALCODE, B.COUNTRY, B.PHONENUMBER FROM USERS A, USERINFO B WHERE A.USERNAME = B.USERNAME AND A.USERNAME='" + Username + "'";
 		AccountCreatedBean acc = new AccountCreatedBean();
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		ResultSet r = p.executeQuery();
@@ -88,10 +97,10 @@ public class UserDAO {
 
 
 	public int insertUserInfo(String userID, String firstName, String lastName, String addressOne, String addressTwo,
-		String citySanitized, String provinceSanitized, String postal, String countrySanitized, String phone) throws SQLException {
+		String citySanitized, String provinceSanitized, String postal, String countrySanitized, String phone) throws SQLException, URISyntaxException {
 		String query = "INSERT INTO USERINFO (USERNAME, FNAME, LNAME,ADDRESS,ADDRESS2, CITY,PROVINCE,POSTALCODE,COUNTRY, PHONENUMBER) VALUES (?,?,?,?,?,?,?,?,?,?)";
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		p.setString(1, userID);
@@ -113,10 +122,10 @@ public class UserDAO {
 	}
 	
 	public int insertUserInfoWithoutPhone(String userID, String firstName, String lastName, String addressOne, String addressTwo,
-			String citySanitized, String provinceSanitized, String postal, String countrySanitized) throws SQLException {
+			String citySanitized, String provinceSanitized, String postal, String countrySanitized) throws SQLException, URISyntaxException {
 			String query = "INSERT INTO USERINFO (USERNAME, FNAME, LNAME,ADDRESS,ADDRESS2, CITY,PROVINCE,POSTALCODE,COUNTRY) VALUES (?,?,?,?,?,?,?,?,?)";
 			
-			Connection con = (Connection) this.ds.getConnection();
+			Connection con = (Connection) getConnection();
 			PreparedStatement p = con.prepareStatement(query);
 			
 			p.setString(1, userID);
@@ -137,10 +146,10 @@ public class UserDAO {
 		}
 	
 	public int insertUserInfoWithoutAddressTwo(String userID, String firstName, String lastName, String addressOne,
-			String citySanitized, String provinceSanitized, String postal, String countrySanitized, String phone) throws SQLException {
+			String citySanitized, String provinceSanitized, String postal, String countrySanitized, String phone) throws SQLException, URISyntaxException {
 			String query = "INSERT INTO USERINFO (USERNAME, FNAME, LNAME,ADDRESS, CITY,PROVINCE,POSTALCODE,COUNTRY, PHONENUMBER) VALUES (?,?,?,?,?,?,?,?,?)";
 			
-			Connection con = (Connection) this.ds.getConnection();
+			Connection con = (Connection) getConnection();
 			PreparedStatement p = con.prepareStatement(query);
 			
 			p.setString(1, userID);
@@ -161,10 +170,10 @@ public class UserDAO {
 		}
 	
 	public int insertUserInfoWithoutAddressNPhone(String userID, String firstName, String lastName, String addressOne,
-			String citySanitized, String provinceSanitized, String postal, String countrySanitized) throws SQLException {
+			String citySanitized, String provinceSanitized, String postal, String countrySanitized) throws SQLException, URISyntaxException {
 			String query = "INSERT INTO USERINFO (USERNAME, FNAME, LNAME,ADDRESS, CITY,PROVINCE,POSTALCODE,COUNTRY) VALUES (?,?,?,?,?,?,?,?)";
 			
-			Connection con = (Connection) this.ds.getConnection();
+			Connection con = (Connection) getConnection();
 			PreparedStatement p = con.prepareStatement(query);
 			
 			p.setString(1, userID);
@@ -184,10 +193,10 @@ public class UserDAO {
 		}
 
 
-	public int insertUser(String userID, String hash) throws SQLException {
-		String query = "INSERT INTO USER (USERNAME, HASHEDPASSWORD) VALUES  (?,?)";
+	public int insertUser(String userID, String hash) throws SQLException, URISyntaxException {
+		String query = "INSERT INTO USERS (USERNAME, HASHEDPASSWORD) VALUES  (?,?)";
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		p.setString(1, userID);
@@ -201,10 +210,10 @@ public class UserDAO {
 	}
 
 
-	public int deleteUser(String userID) throws SQLException {
-		String query = "DELETE FROM USER WHERE USERNAME=?";
+	public int deleteUser(String userID) throws SQLException, URISyntaxException {
+		String query = "DELETE FROM USERS WHERE USERNAME=?";
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		p.setString(1, userID);
@@ -217,10 +226,10 @@ public class UserDAO {
 	}
 	
 	
-	public int insertPO(String lname, String fname,String status, String address) throws SQLException {
+	public int insertPO(String lname, String fname,String status, String address) throws SQLException, URISyntaxException {
 		String query = "INSERT INTO PO (lname, fname, status, address)  VALUES  (?,?,?,?)";
 		
-		Connection con = (Connection) this.ds.getConnection();
+		Connection con = (Connection) getConnection();
 		PreparedStatement p = con.prepareStatement(query);
 		
 		p.setString(1, lname);
